@@ -344,6 +344,26 @@ with tab3:
             </div>
             """, unsafe_allow_html=True)
 
+    st.subheader("Test a Real Transaction")
+    idx = st.number_input("Pick a transaction index (0 to {})".format(len(X_test)-1), 
+                       min_value=0, max_value=len(X_test)-1, value=0)
+
+    if st.button("Check This Transaction"):
+        X_input = X_test[idx].reshape(1, -1)
+        prob = float(model.predict(X_input, verbose=0)[0][0])
+        true_label = y_test[idx]
+        verdict = "🚨 FRAUD" if prob >= threshold else "✅ LEGITIMATE"
+        actual  = "🚨 FRAUD" if true_label == 1 else "✅ LEGITIMATE"
+        color   = "#ef4444" if prob >= threshold else "#22c55e"
+
+        st.markdown(f"""
+        <div style='padding:20px; border-radius:12px; border: 2px solid {color}; text-align:center;'>
+            <h2 style='color:{color};'>{verdict}</h2>
+            <p>Fraud probability: <strong>{prob:.4f}</strong></p>
+            <p>Actual label: <strong>{actual}</strong></p>
+        </div>
+        """, unsafe_allow_html=True)
+
 
 # ─── TAB 4: Threshold Analysis ────────────────────────────────────────────────
 with tab4:
